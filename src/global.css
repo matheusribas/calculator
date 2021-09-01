@@ -17,13 +17,26 @@ input, button, textarea {
     font: 400 18px Roboto, sans-serif;   
 }
 
-button {
+button { 
     cursor: pointer;
 }
 
-.bg-warning { background-color: #fe9505; }
-.bg-dark { background-color: #333333; }
-.bg-gray { background-color: #a5a5a5; }
+.bg-warning { 
+    background-color: #fe9505; 
+}
 
-.text-dark { color: #000; }
-.text-white { color: #fff; }
+.bg-dark { 
+    background-color: #333333; 
+}
+
+.bg-gray { 
+    background-color: #a5a5a5; 
+}
+
+.text-dark { 
+    color: #000; 
+}
+
+.text-white { 
+    color: #fff; 
+}
