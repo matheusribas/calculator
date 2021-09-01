@@ -9,7 +9,7 @@
 
 body {
     font: 400 14px Roboto, sans-serif;
-    background: #f0f0f5;
+    background: #505050;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -20,3 +20,10 @@ input, button, textarea {
 button {
     cursor: pointer;
 }
+
+.bg-warning { background-color: #fe9505; }
+.bg-dark { background-color: #333333; }
+.bg-gray { background-color: #a5a5a5; }
+
+.text-dark { color: #000; }
+.text-white { color: #fff; }
