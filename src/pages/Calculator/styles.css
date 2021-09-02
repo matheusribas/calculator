@@ -9,7 +9,7 @@
 
 .calculator {
     display: block;
-    padding: 0 12px 6px;
+    padding: 0 6px 6px;
     width: max-content;
     height: max-content;
     background-color: #000;
@@ -20,29 +20,29 @@
     display: flex;
     justify-content: right;
     align-items: center;
-    padding-right: 10px;
+    padding-right: .6rem;
     height: 90px;
     color: #fff;
-    font-size: 2rem;
+    font-size: 3rem;
 }
 
 .calculator-body {
     display: grid;
 }
 
-.calculator-body .ac {
+.calculator-body .row-ac {
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 1;
 }
 
-.calculator-body .numbers {
+.calculator-body .grid-numbers {
     display: grid;
     grid-template-columns: auto auto auto;
     grid-row-start: 2;
 }
 
-.calculator-body .operators {
+.calculator-body .col-operators {
     display: grid;
     grid-row-start: 1;
     grid-row-end: 3;
