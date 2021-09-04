@@ -10,20 +10,22 @@
 .calculator {
     display: block;
     padding: 0 6px 6px;
-    width: max-content;
-    height: max-content;
+    width: 307px;
+    height: 464px;
     background-color: #000;
     border-radius: .5rem;
 }
 
 .calculator-header {
-    display: flex;
-    justify-content: right;
-    align-items: center;
-    padding-right: .6rem;
-    height: 90px;
+    text-align: right;
+    padding: 1rem .6rem 0 0;
+    max-width: 294px;
+    min-height: 90px;
+    height: auto;
+    word-wrap: break-word;
     color: #fff;
     font-size: 3rem;
+    transition: font-size .5s;
 }
 
 .calculator-body {
