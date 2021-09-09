@@ -40,3 +40,23 @@ button {
 .text-white { 
     color: #fff; 
 }
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+.nav-menu {
+    margin-bottom: 1rem;
+}
+
+.nav-menu a {
+    color: #fe9505;
+    font-size: 1rem;
+    text-decoration: none;
+}

@@ -1,9 +1,7 @@
-const stateHistory = []
-
-export default function historyReducer (state = stateHistory, action) {
+export default function historyReducer (state = [], action) {
     switch (action.type) {
         case 'ADD_EQUATION': 
-            return state.push(action.payload)
+            return state = [...state, action.payload]
         default: 
             return state
     }

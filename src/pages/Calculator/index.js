@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { round, evaluate } from 'mathjs'
 import Button from '../../components/Button'
+
+import { useDispatch } from 'react-redux'
+import { addEquation } from '../../store/History/History.action'
 
 import './styles.css'
 
 export default function Calculator() {
+
+    const dispatch = useDispatch()
 
     let displayResult
     const operators = ['/', 'x', '*', '-', '+']
@@ -87,7 +93,10 @@ export default function Calculator() {
 
             if (operators.indexOf(valueReplace.substr(-1)) !== -1) displayResult = prev
             else if (prev === '0') displayResult = prev
-            else displayResult = round(evaluate(valueReplace),  3).toString().replaceAll('.', ',')
+            else {
+                displayResult = round(evaluate(valueReplace), 3).toString().replaceAll('.', ',')
+                dispatch(addEquation(`${prev}=${displayResult}`))
+            }
 
             return displayResult
         })
@@ -95,12 +104,13 @@ export default function Calculator() {
 
     return (
         <div className='container'>
+            <div className='nav-menu'>
+                <Link to='/history'>Histórico</Link>
+            </div>
             <div className='calculator'>
                 <div 
                     className='calculator-header' 
-                    style={{
-                        fontSize: fontSize
-                    }}
+                    style={{ fontSize: fontSize }}
                 >
                     {display}
                 </div>
