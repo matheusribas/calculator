@@ -14,7 +14,10 @@ export default function Calculator() {
 
     let displayResult
     const operators = ['/', 'x', '*', '-', '+']
+
     const [display, setDisplay] = useState('0')
+    const [displayError, setDisplayError] = useState(false)
+
     const [fontSize, setFontSize] = useState('3rem')
 
     useEffect(() => {
@@ -22,9 +25,16 @@ export default function Calculator() {
         else setFontSize('3rem')
     }, [display])
 
+    function handleAC(e) {
+        e.preventDefault()
+        setDisplay('0')
+        setDisplayError(false)
+    }
+
     function handleInputReverse(e) {
         e.preventDefault()
         setDisplay(prev => {
+            console.log(String(prev) === 'Infinity' || String(prev) === 'NaN')
             if(prev[0] === '-') displayResult = prev.substr(1)
             else if (prev === '0') displayResult = prev
             else displayResult = `-${prev}`
@@ -47,7 +57,12 @@ export default function Calculator() {
     function handleInputNumber(e) {
         e.preventDefault()
         setDisplay(prev => {
-            if(prev === '0' && e.target.innerHTML !== '0') displayResult = e.target.innerHTML
+
+            if((prev.includes('NaN') || prev.includes('Infinity'))) {
+                displayResult = e.target.innerHTML
+                setDisplayError(false)
+            }
+            else if(prev === '0' && e.target.innerHTML !== '0') displayResult = e.target.innerHTML
             else if(prev === '0' && e.target.innerHTML === '0') displayResult = prev
             else if(e.target.innerHTML === '0') {
                 
@@ -56,6 +71,7 @@ export default function Calculator() {
 
                 if(existOperatorMoreZero) displayResult = prev
                 else displayResult = prev.concat(e.target.innerHTML)
+
             }
             else displayResult = prev.concat(e.target.innerHTML)
 
@@ -107,6 +123,8 @@ export default function Calculator() {
 
             return displayResult
         })
+
+        setDisplayError((displayResult.includes('NaN') || displayResult.includes('Infinity')))
     }
 
     return (
@@ -115,17 +133,14 @@ export default function Calculator() {
                 <Link to='/history'>Histórico</Link>
             </div>
             <div className='calculator'>
-                <div 
-                    className='calculator-header' 
-                    style={{ fontSize: fontSize }}
-                >
+                <div className='calculator-header' style={{ fontSize }}>
                     {display}
                 </div>
                 <div className='calculator-body'>
                     <div className='row-ac'>
-                        <Button onClick={_ => setDisplay('0')} color='dark' bg='gray'>AC</Button>
-                        <Button onClick={handleInputReverse} color='dark' bg='gray'>+/-</Button>
-                        <Button onClick={handleInputPorcent} color='dark' bg='gray'>%</Button>
+                        <Button onClick={handleAC} color='dark' bg='gray'>AC</Button>
+                        <Button onClick={handleInputReverse} color='dark' bg='gray' disabled={displayError}>+/-</Button>
+                        <Button onClick={handleInputPorcent} color='dark' bg='gray' disabled={displayError}>%</Button>
                     </div>
                     <div className='grid-numbers'>
                         <Button onClick={handleInputNumber} color='white' bg='dark'>7</Button>
@@ -138,14 +153,14 @@ export default function Calculator() {
                         <Button onClick={handleInputNumber} color='white' bg='dark'>2</Button>
                         <Button onClick={handleInputNumber} color='white' bg='dark'>3</Button>
                         <Button onClick={handleInputNumber} color='white' bg='dark' col={2}>0</Button>
-                        <Button onClick={handleInputComma} color='white' bg='dark'>,</Button>
+                        <Button onClick={handleInputComma} color='white' bg='dark' disabled={displayError}>,</Button>
                     </div>
                     <div className='col-operators'>
-                        <Button onClick={handleInputOperator} color='dark' bg='warning'>/</Button>
-                        <Button onClick={handleInputOperator} color='dark' bg='warning'>x</Button>
-                        <Button onClick={handleInputOperator} color='dark' bg='warning'>-</Button>
-                        <Button onClick={handleInputOperator} color='dark' bg='warning'>+</Button>
-                        <Button onClick={handleInputResult} color='dark' bg='warning'>=</Button>
+                        <Button onClick={handleInputOperator} color='dark' bg='warning' disabled={displayError}>/</Button>
+                        <Button onClick={handleInputOperator} color='dark' bg='warning' disabled={displayError}>x</Button>
+                        <Button onClick={handleInputOperator} color='dark' bg='warning' disabled={displayError}>-</Button>
+                        <Button onClick={handleInputOperator} color='dark' bg='warning' disabled={displayError}>+</Button>
+                        <Button onClick={handleInputResult} color='dark' bg='warning' disabled={displayError}>=</Button>
                     </div>
                 </div>
             </div>
