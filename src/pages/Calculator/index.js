@@ -49,11 +49,18 @@ export default function Calculator() {
         setDisplay(prev => {
             if(prev === '0' && e.target.innerHTML !== '0') displayResult = e.target.innerHTML
             else if(prev === '0' && e.target.innerHTML === '0') displayResult = prev
+            else if(e.target.innerHTML === '0') {
+                
+                let existOperatorMoreZero
+                operators.map((op) => (prev.substr(-2).indexOf(`${op}0`) !== -1) ? existOperatorMoreZero = true : null)
+
+                if(existOperatorMoreZero) displayResult = prev
+                else displayResult = prev.concat(e.target.innerHTML)
+            }
             else displayResult = prev.concat(e.target.innerHTML)
 
             return displayResult
-        } 
-        )
+        })
     }
 
     function handleInputComma(e) {
