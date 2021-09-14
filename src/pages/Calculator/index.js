@@ -25,16 +25,13 @@ export default function Calculator() {
         else setFontSize('3rem')
     }, [display])
 
-    function handleAC(e) {
-        e.preventDefault()
+    function handleAC() {
         setDisplay('0')
         setDisplayError(false)
     }
 
-    function handleInputReverse(e) {
-        e.preventDefault()
+    function handleInputReverse() {
         setDisplay(prev => {
-            console.log(String(prev) === 'Infinity' || String(prev) === 'NaN')
             if(prev[0] === '-') displayResult = prev.substr(1)
             else if (prev === '0') displayResult = prev
             else displayResult = `-${prev}`
@@ -43,8 +40,7 @@ export default function Calculator() {
         })
     }
 
-    function handleInputPorcent(e) {
-        e.preventDefault()
+    function handleInputPorcent() {
         setDisplay(prev => {
             const valueReplace = Number(prev.toString().replaceAll(',', '.'))
             if(valueReplace) displayResult = ((valueReplace / 100).toString().replace('.', ','))
@@ -54,33 +50,28 @@ export default function Calculator() {
         })
     }
 
-    function handleInputNumber(e) {
-        e.preventDefault()
+    function handleInputNumber(number) {
         setDisplay(prev => {
-
-            if((prev.includes('NaN') || prev.includes('Infinity'))) {
-                displayResult = e.target.innerHTML
+            if((prev === 'Erro')) {
+                displayResult = number
                 setDisplayError(false)
             }
-            else if(prev === '0' && e.target.innerHTML !== '0') displayResult = e.target.innerHTML
-            else if(prev === '0' && e.target.innerHTML === '0') displayResult = prev
-            else if(e.target.innerHTML === '0') {
-                
+            else if(prev === '0' && number !== '0') displayResult = number
+            else if(prev === '0' && number === '0') displayResult = prev
+            else if(number === '0') {
                 let existOperatorMoreZero
                 operators.map((op) => (prev.substr(-2).indexOf(`${op}0`) !== -1) ? existOperatorMoreZero = true : null)
 
                 if(existOperatorMoreZero) displayResult = prev
-                else displayResult = prev.concat(e.target.innerHTML)
-
+                else displayResult = prev.concat(number)
             }
-            else displayResult = prev.concat(e.target.innerHTML)
+            else displayResult = prev.concat(number)
 
             return displayResult
         })
     }
 
-    function handleInputComma(e) {
-        e.preventDefault()
+    function handleInputComma() {
         setDisplay(prev => {
             if (operators.indexOf(prev.substr(-1)) !== -1) displayResult = prev
             else if (prev.indexOf(',') !== -1) {
@@ -92,25 +83,23 @@ export default function Calculator() {
                 displayResult = prev.substr(0, existOperator).concat(lastNumber)
             }
             else if (prev.substr(-1) === ',') displayResult = prev
-            else displayResult = prev.concat(e.target.innerHTML)
+            else displayResult = prev.concat(',')
 
             return displayResult
         })
     }
 
-    function handleInputOperator(e) {
-        e.preventDefault()
+    function handleInputOperator(operator) {
         setDisplay(prev => {
-            if (prev.substr(-1) === e.target.innerHTML) displayResult = prev
-            else if (operators.indexOf(prev.substr(-1)) !== -1) displayResult = prev.substr(0, (prev.length - 1)).concat(e.target.innerHTML)
-            else displayResult = prev.concat(e.target.innerHTML)
+            if (prev.substr(-1) === operator) displayResult = prev
+            else if (operators.indexOf(prev.substr(-1)) !== -1) displayResult = prev.substr(0, (prev.length - 1)).concat(operator)
+            else displayResult = prev.concat(operator)
 
             return displayResult
         })
     }
 
-    function handleInputResult(e) {
-        e.preventDefault()
+    function handleInputResult() {
         setDisplay(prev => {
             const valueReplace = prev.replaceAll('x', '*').replaceAll(',', '.')
 
@@ -121,14 +110,45 @@ export default function Calculator() {
                 dispatch(addEquation(`${prev}=${displayResult}`))
             }
 
+            displayResult = (displayResult.includes('NaN') || displayResult.includes('Infinity')) ? 'Erro' : displayResult
             return displayResult
         })
+        setDisplayError((displayResult === 'Erro'))
+    }
 
-        setDisplayError((displayResult.includes('NaN') || displayResult.includes('Infinity')))
+    function handleKeyDown(e) {
+        if(
+            (e.keyCode >= 96 && e.keyCode <= 105) || 
+            (e.keyCode >= 48 && e.keyCode <= 57 && !e.shiftKey)
+        ) handleInputNumber(e.key)
+        else if (e.keyCode === 46) handleAC()
+        else if (
+            e.keyCode === 53 && e.shiftKey && 
+            !displayError
+        ) handleInputPorcent()
+        else if (
+            (e.keyCode === 110 || e.keyCode === 188) && 
+            !displayError
+        ) handleInputComma()
+        else if (
+            (e.keyCode === 13 || (e.keyCode === 187 && !e.shiftKey)) && 
+            !displayError
+        ) handleInputResult()
+        else if (
+            (e.keyCode === 106 || (e.keyCode === 189 && !e.shiftKey) ||
+            e.keyCode === 107 || (e.keyCode === 187 && e.shiftKey) ||
+            e.keyCode === 109 || (e.keyCode === 56 && e.shiftKey) ||
+            e.keyCode === 111 || (e.keyCode === 193  && !e.shiftKey)) && 
+            !displayError
+        ) handleInputOperator(e.key === '*' ? 'x' : e.key)
     }
 
     return (
-        <div className='container'>
+        <div 
+            className='container'
+            onKeyDown={handleKeyDown}
+            tabIndex='0'
+        >
             <div className='nav-menu'>
                 <Link to='/history'>Histórico</Link>
             </div>
@@ -143,23 +163,23 @@ export default function Calculator() {
                         <Button onClick={handleInputPorcent} color='dark' bg='gray' disabled={displayError}>%</Button>
                     </div>
                     <div className='grid-numbers'>
-                        <Button onClick={handleInputNumber} color='white' bg='dark'>7</Button>
-                        <Button onClick={handleInputNumber} color='white' bg='dark'>8</Button>
-                        <Button onClick={handleInputNumber} color='white' bg='dark'>9</Button>
-                        <Button onClick={handleInputNumber} color='white' bg='dark'>4</Button>
-                        <Button onClick={handleInputNumber} color='white' bg='dark'>5</Button>
-                        <Button onClick={handleInputNumber} color='white' bg='dark'>6</Button>
-                        <Button onClick={handleInputNumber} color='white' bg='dark'>1</Button>
-                        <Button onClick={handleInputNumber} color='white' bg='dark'>2</Button>
-                        <Button onClick={handleInputNumber} color='white' bg='dark'>3</Button>
-                        <Button onClick={handleInputNumber} color='white' bg='dark' col={2}>0</Button>
+                        <Button onClick={_ => handleInputNumber('7')} color='white' bg='dark'>7</Button>
+                        <Button onClick={_ => handleInputNumber('8')} color='white' bg='dark'>8</Button>
+                        <Button onClick={_ => handleInputNumber('9')} color='white' bg='dark'>9</Button>
+                        <Button onClick={_ => handleInputNumber('4')} color='white' bg='dark'>4</Button>
+                        <Button onClick={_ => handleInputNumber('5')} color='white' bg='dark'>5</Button>
+                        <Button onClick={_ => handleInputNumber('6')} color='white' bg='dark'>6</Button>
+                        <Button onClick={_ => handleInputNumber('1')} color='white' bg='dark'>1</Button>
+                        <Button onClick={_ => handleInputNumber('2')} color='white' bg='dark'>2</Button>
+                        <Button onClick={_ => handleInputNumber('3')} color='white' bg='dark'>3</Button>
+                        <Button onClick={_ => handleInputNumber('0')} color='white' bg='dark' col={2}>0</Button>
                         <Button onClick={handleInputComma} color='white' bg='dark' disabled={displayError}>,</Button>
                     </div>
                     <div className='col-operators'>
-                        <Button onClick={handleInputOperator} color='dark' bg='warning' disabled={displayError}>/</Button>
-                        <Button onClick={handleInputOperator} color='dark' bg='warning' disabled={displayError}>x</Button>
-                        <Button onClick={handleInputOperator} color='dark' bg='warning' disabled={displayError}>-</Button>
-                        <Button onClick={handleInputOperator} color='dark' bg='warning' disabled={displayError}>+</Button>
+                        <Button onClick={_ => handleInputOperator('/')} color='dark' bg='warning' disabled={displayError}>/</Button>
+                        <Button onClick={_ => handleInputOperator('x')} color='dark' bg='warning' disabled={displayError}>x</Button>
+                        <Button onClick={_ => handleInputOperator('-')} color='dark' bg='warning' disabled={displayError}>-</Button>
+                        <Button onClick={_ => handleInputOperator('+')} color='dark' bg='warning' disabled={displayError}>+</Button>
                         <Button onClick={handleInputResult} color='dark' bg='warning' disabled={displayError}>=</Button>
                     </div>
                 </div>
