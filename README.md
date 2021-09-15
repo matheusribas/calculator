@@ -1,1 +1,2 @@
-Simples calculadora feita com ReactJS e Redux inspirada na calculadora do iPhone.
+Simples calculadora inspirada no layout da calculadora do iPhone.
+Feita com as stacks React e Redux.
