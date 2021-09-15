@@ -6,7 +6,7 @@ import History from './pages/History'
 
 export default function Routes () {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename='https://matheusribas.github.io/calculator'>
             <Switch>
                 <Route path="/" exact component={Calculator} />
                 <Route path="/history" component={History} />
